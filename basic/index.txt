@@ -1,0 +1,37 @@
+    Node ?
+    Environment to run javascript codes.
+
+    why node?
+browsers resctrict can do like CRUD. 
+
+Node Usage?
+nor only for server, apart from
+chat box
+
+Stact
+Queue
+WebAPIs --> wait for hence complete
+event Loop -->push queue to stack when statck is empty.
+
+
+********--------------------*******--------
+FILE SYSTEM IN NODE:
+
+writeFile("file_name", data,(err)=>{
+
+});
+
+fs.readFile("file_name", "file-encoding", (err,data)=>{
+    if(errr=) {
+
+    }
+    //output content of the file
+    console.log(data)
+})
+fs.readFile("./myText.txt","utf-8");
+
+fs.appendFile("file_name",data)
+
+
+Postman?
+for testing th
