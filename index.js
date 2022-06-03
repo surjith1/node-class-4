@@ -8,7 +8,7 @@ console.log(process.env.MONGO_URL);
 const app = express() //call express method
 
 
-const port =4000;
+const port =process.env.PORT;
 
   app.use(express.json());
   const MONGO_URL = process.env.MONGO_URL;
@@ -43,10 +43,28 @@ app.get('/movies/:id', async function (req, res) {
     movie? res.send(movie) : res.status(404).send({msg:"No such Movie found"});
 })
 
+app.delete('/movies/:id', async function (req, res) {
+  const {id} = req.params;
+  const movie = await client
+  .db("B33WD")
+  .collection("movies")
+  .deleteOne({id:id});
+  //const movie = movies.find(mv => mv.id ===id)
+
+  movie.deletedCount>0? res.send(movie) : res.status(404).send({msg:"No such Movie found"});
+})
+
 app.post('/movies', async function (req, res) {
   const data = req.body;
   console.log(data);
   const result = await client.db("B33WD").collection("movies").insertMany(data);
+  res.send(result);
+})
+app.put('/movies/:id', async function (req, res) {
+  const data = req.body;
+  const {id} = req.params;
+  console.log(data);
+  const result = await client.db("B33WD").collection("movies").updateOne({id:id},{$set:data});
   res.send(result);
 })
 
