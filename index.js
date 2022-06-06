@@ -1,6 +1,7 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from'dotenv';
+import {moviesRouter} from './routes/movies.js'
 
 //const express = require('express') //3rd pary imort
 dotenv.config();
@@ -20,52 +21,11 @@ const port =process.env.PORT;
     return client;
   }
   
-const client = await createConnection();
+export const client = await createConnection();
+
 app.get('/', function (req, res) {
   res.send('Hello Surjith')
 })
-app.get('/movies', async function (req, res) {
-  const movie = await client
-    .db("B33WD")
-    .collection("movies")
-    .find({}).toArray();
-  
-    res.send(movie);
-})
-app.get('/movies/:id', async function (req, res) {
-    const {id} = req.params;
-    const movie = await client
-    .db("B33WD")
-    .collection("movies")
-    .findOne({id:id});
-    //const movie = movies.find(mv => mv.id ===id)
-
-    movie? res.send(movie) : res.status(404).send({msg:"No such Movie found"});
-})
-
-app.delete('/movies/:id', async function (req, res) {
-  const {id} = req.params;
-  const movie = await client
-  .db("B33WD")
-  .collection("movies")
-  .deleteOne({id:id});
-  //const movie = movies.find(mv => mv.id ===id)
-
-  movie.deletedCount>0? res.send(movie) : res.status(404).send({msg:"No such Movie found"});
-})
-
-app.post('/movies', async function (req, res) {
-  const data = req.body;
-  console.log(data);
-  const result = await client.db("B33WD").collection("movies").insertMany(data);
-  res.send(result);
-})
-app.put('/movies/:id', async function (req, res) {
-  const data = req.body;
-  const {id} = req.params;
-  console.log(data);
-  const result = await client.db("B33WD").collection("movies").updateOne({id:id},{$set:data});
-  res.send(result);
-})
+app.use('/movies', moviesRouter)
 
 app.listen(port,()=>console.log(`app Started ${port}`))
