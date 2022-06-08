@@ -1,7 +1,8 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from'dotenv';
-import {moviesRouter} from './routes/movies.js'
+import {moviesRouter} from './routes/movies.js';
+import {userRouter} from './routes/users.js';
 
 //const express = require('express') //3rd pary imort
 dotenv.config();
@@ -27,5 +28,8 @@ app.get('/', function (req, res) {
   res.send('Hello Surjith')
 })
 app.use('/movies', moviesRouter)
+app.use('/users', userRouter)
 
 app.listen(port,()=>console.log(`app Started ${port}`))
+
+

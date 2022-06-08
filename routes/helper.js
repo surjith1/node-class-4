@@ -21,3 +21,18 @@ export async function getAllMovies() {
         .collection("movies")
         .find({}).toArray();
 }
+//creating sign up user
+export async function createUser(data) { 
+    return await client
+        .db("B33WD")
+        .collection("users")
+        .insertOne(data)
+}
+export async function getUsersByName(username) {
+   const user = await client
+        .db("B33WD")
+        .collection("users")
+        .findOne({ username: username });
+        return user;
+}
+
