@@ -1,6 +1,8 @@
 import express  from 'express';
 import {createUser,getUsersByName} from './helper.js';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { response } from 'express';
 
 const router = express.Router();
 // async function genHashedPassword(password) {
@@ -31,18 +33,31 @@ async function genHashedPassword(password) {
     res.send(result);
     }
   
-    // const result = await createUser({
-    //   username:username, 
-    //   password:hashedPassword
-    // })
-    // isUserExist ? console.log("User Already Exist") :  createUser()
     
-    //res.send(isUserExist);
-    //res.send(result);
-    //  const hashedPassword = await genHashedPassword(password);
-    //  const isUserExist = await getUsersByName(username);
-    // console.log(username, isUserExist)
-    // res.send(isUserExist);
+  });
+
+  router.post('/login', async function (req, res) {
+    const {username, password} = req.body;
+    const userFromDB = await getUsersByName(username);
+ console.log(userFromDB);
+ if(!userFromDB) {
+   res.status(401).send({msg: "Invalid Credentials"})
+ }
+ else {
+   const dbStoredPassword = userFromDB.password;
+   const isPasswordMatch= await bcrypt.compare(password,dbStoredPassword)
+ console.log(isPasswordMatch);
+ if(isPasswordMatch) {
+  const token= jwt.sign({id: userFromDB._id},process.env.SECRET_KEY)
+res.send({msg:"Successfully Loged in",token:token})
+ }
+ else{
+  res.status(401).send({msg: "Invalid Credentials"})
+ }
+   res.send(isPasswordMatch);
+ 
+  }
+   
   });
 
 
